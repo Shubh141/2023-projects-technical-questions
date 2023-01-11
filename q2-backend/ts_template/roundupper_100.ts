@@ -41,7 +41,12 @@ app.post('/entity', (req, res) => {
 
 // lasooable returns all the space animals a space cowboy can lasso given their name
 app.get('/lassoable', (req, res) => {
-    // TODO: fill me in
+    
+    
+    // Check if the given cowboy exists in the database
+    
+    
+    
 })
 
 
