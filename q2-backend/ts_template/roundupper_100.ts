@@ -23,16 +23,16 @@ const app = express();
 app.post('/entity', (req, res) => {
     try {
         const { entities } = req.body;
+        // Keep pushing entities into the space database until either all 
+        // entities have been pushed or an invalid entity has been reached
         for (const entity of entities) {
             // Check if the data parsed in has the correct format
             if (checkFormat(entity)) {
-                
+                spaceDatabase.push(entity);
+            } else {
+                return res.sendStatus(400);   
             }
-            
         }
-        
-        
-        
         return res.sendStatus(200);
     } catch(err) {
         return res.sendStatus(400);
@@ -53,26 +53,30 @@ app.get('/lassoable', (req, res) => {
 // A helper function to check if an entity is formatted correctly
 function checkFormat(entity: any): boolean {
     // Return false if the entity's location type is invalid
-    if (typeof entity.location.x !== 'number' || entity.location.y.type !== 'number') return false;
-    
-    if (entity.type === "space_animal") {
-        // Return true if the entity metadata type is valid
-        switch (entity.metadata.type) {
-            case "pig":
-            case "cow":
-            case "flying_burger:
-                return true;
-        }
-      
-    } else if (entity.type === "space_cowboy") {
-        
-        
-        
-        
+    if (typeof entity.location.x !== 'number' || 
+        typeof entity.location.y !== 'number') return false;
+
+    if (entity.type === 'space_animal') {
+        // Return false if the space animal is not a pig, cow or flying_burger
+        if (!(entity.metadata.type === 'pig' ||
+            entity.metadata.type === 'cow' ||
+            entity.metadata.type === 'flying_burger')) {
+            return false;
+        } 
+    } 
+    else if (entity.type === 'space_cowboy') {
+        // Return false if the space_cowboy's name or lassoLength type is invalid
+        if (typeof entity.metadata.name !== 'string' || 
+            typeof entity.metadata.lassoLength !== 'number') return false;
+    } 
+    else {
+        // Return false if the entity is neither a space_cowboy nor a space_animal
+        return false;
     }
-    // If the entity is neither a space_cowboy nor a space_animal
-    return false;
+    // If the entity passes all format checks above, return true
+    return true;
 }
+
 
 
 
