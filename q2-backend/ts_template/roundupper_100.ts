@@ -36,10 +36,7 @@ app.post('/entity', (req, res) => {
         return res.sendStatus(200);
     } catch(err) {
         return res.sendStatus(400);
-    }
-    
-    
-    
+    } 
 });
 
 // lasooable returns all the space animals a space cowboy can lasso given their name
