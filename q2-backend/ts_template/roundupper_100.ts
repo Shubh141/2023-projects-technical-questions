@@ -53,6 +53,7 @@ app.get('/lassoable', (req, res) => {
     
     // Extract all lassoable entities
     const space_animals = spaceDatabase.filter(entity => isLassoable(cowboy_obj, entity) === true);  
+    return res.status(200).json({"space_animals": space_animals});
 })
 
 
