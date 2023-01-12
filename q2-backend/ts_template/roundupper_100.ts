@@ -48,7 +48,7 @@ app.get('/lassoable', (req, res) => {
                                           entity.metadata.name === cowboy) as { type: "space_cowboy", 
                                           metadata: spaceCowboy, location: location };
     
-        // If the queried cowboy doesn't exist
+    // If the queried cowboy doesn't exist
     if (cowboy_obj === null) {
         return res.sendStatus(400);
     }
