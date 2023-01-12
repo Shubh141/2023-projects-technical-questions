@@ -105,6 +105,4 @@ function checkFormat(entity: any): boolean {
 }
 
 
-
-
 app.listen(8080);
