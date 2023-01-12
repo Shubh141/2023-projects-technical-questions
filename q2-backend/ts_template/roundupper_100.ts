@@ -71,12 +71,13 @@ function isLassoable(space_cowboy: spaceEntity, space_animal: spaceEntity): bool
     return false;
 }
 
+
 // A helper function to calculate the pythagorean distance between a pair of coordinates
 function distance(x1: number, y1: number, x2: number, y2: number) {
     let dist = Math.pow((y2 - y1), 2) + Math.pow((x2 - x1), 2);
     return Math.sqrt(dist);
 }
-    
+
 
 // A helper function to check if an entity is formatted correctly
 function checkFormat(entity: any): boolean {
