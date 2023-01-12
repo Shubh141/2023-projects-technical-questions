@@ -41,16 +41,42 @@ app.post('/entity', (req, res) => {
 
 // lasooable returns all the space animals a space cowboy can lasso given their name
 app.get('/lassoable', (req, res) => {
+    const cowboy = req.query.cowboy_name;
     
+    // Extract cowboy object from database
+    const cowboy_obj = spaceDatabase.find(entity => entity.type === "space_cowboy" 
+                                          && entity.metadata.name === cowboy);
+    // If the queried cowboy doesn't exist
+    if (cowboy_obj === null) {
+        return res.sendStatus(400);
+    }
     
-    // Check if the given cowboy exists in the database
-    
-    
-    
+    // Extract all lassoable entities
+    const space_animals = spaceDatabase.filter(entity => isLassoable(cowboy_obj, entity) === true);  
 })
 
 
 //////////////////////////////////////////////// HELPER FUNCTIONS ////////////////////////////////////////////////
+
+// A helper function to check whether a space animal is lassoable
+function isLassoable(space_cowboy: spaceEntity, space_animal: spaceEntity): boolean {
+    // Calculate the distance between the cowboy and the animal
+    const dist = distance(space_cowboy.location.x, space_cowboy.location.y, 
+                          space_animal.location.x, space_animal.location.y);
+    
+    // Return true if the cowboy's lasso length is greater than or equal to the distance
+    if (space_cowboy.metadata.lassoLength >= dist) {
+        return true;
+    }
+    return false;
+}
+
+// A helper function to calculate the pythagorean distance between a pair of coordinates
+function distance(x1: number, y1: number, x2: number, y2: number) {
+    let dist = Math.pow((y2 - y1), 2) + Math.pow((x2 - x1), 2);
+    return Math.sqrt(dist);
+}
+    
 
 // A helper function to check if an entity is formatted correctly
 function checkFormat(entity: any): boolean {
