@@ -44,9 +44,11 @@ app.get('/lassoable', (req, res) => {
     const cowboy = req.query.cowboy_name;
     
     // Extract cowboy object from database
-    const cowboy_obj = spaceDatabase.find(entity => entity.type === "space_cowboy" 
-                                          && entity.metadata.name === cowboy);
-    // If the queried cowboy doesn't exist
+    const cowboy_obj = spaceDatabase.find(entity => entity.type === "space_cowboy" && 
+                                          entity.metadata.name === cowboy) as { type: "space_cowboy", 
+                                          metadata: spaceCowboy, location: location };
+    
+        // If the queried cowboy doesn't exist
     if (cowboy_obj === null) {
         return res.sendStatus(400);
     }
@@ -61,12 +63,15 @@ app.get('/lassoable', (req, res) => {
 
 // A helper function to check whether a space animal is lassoable
 function isLassoable(space_cowboy: spaceEntity, space_animal: spaceEntity): boolean {
+    const space_cowboy_meta = space_cowboy.metadata as spaceCowboy;
+    const lassoLength = space_cowboy_meta.lassoLength;
+
     // Calculate the distance between the cowboy and the animal
     const dist = distance(space_cowboy.location.x, space_cowboy.location.y, 
                           space_animal.location.x, space_animal.location.y);
     
     // Return true if the cowboy's lasso length is greater than or equal to the distance
-    return (space_cowboy.metadata.lassoLength >= dist) ? true : false;
+    return (lassoLength >= dist) ? true : false;
 }
 
 
