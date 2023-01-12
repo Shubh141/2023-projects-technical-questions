@@ -65,10 +65,7 @@ function isLassoable(space_cowboy: spaceEntity, space_animal: spaceEntity): bool
                           space_animal.location.x, space_animal.location.y);
     
     // Return true if the cowboy's lasso length is greater than or equal to the distance
-    if (space_cowboy.metadata.lassoLength >= dist) {
-        return true;
-    }
-    return false;
+    return (space_cowboy.metadata.lassoLength >= dist) ? true : false;
 }
 
 
