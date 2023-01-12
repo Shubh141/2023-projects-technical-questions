@@ -18,3 +18,14 @@
     flex: 1 1 0px;
     flex-direction: column;
 }
+
+.updates {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.date {
+    color: blue;
+    font-size: 0.7rem;
+}
