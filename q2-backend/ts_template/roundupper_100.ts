@@ -16,7 +16,8 @@ type spaceEntity =
 
 // spaceAnimalObj models a spaceAnimal, along with its
 // type and location
-type spaceAnimalObj = {type: "spaceAnimal", location: "location"};
+type spaceAnimalObj = 
+     {type: "space_animal", location: location};
 
 // === ExpressJS setup + Server setup ===
 const spaceDatabase = [] as spaceEntity[];
@@ -59,7 +60,9 @@ app.get('/lassoable', (req, res) => {
     }
 
     // Extract all lassoable entities
-    const space_animals = spaceDatabase.filter(entity => isLassoable(cowboy_obj, entity) === true);  
+    const space_animals_with_meta = spaceDatabase.filter(entity => isLassoable(cowboy_obj, entity) === true);  
+    const space_animals = space_animals_with_meta.map(({metadata, ...keepAttrs}) => keepAttrs) as spaceAnimalObj[];
+
     return res.status(200).json({"space_animals": space_animals});
 })
 
