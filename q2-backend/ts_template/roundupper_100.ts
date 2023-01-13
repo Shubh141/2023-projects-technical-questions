@@ -12,8 +12,11 @@ type spaceEntity =
     | { type: "space_cowboy", metadata: spaceCowboy, location: location }
     | { type: "space_animal", metadata: spaceAnimal, location: location };
 
-
 // === ADD YOUR CODE BELOW :D ===
+
+// spaceAnimalObj models a spaceAnimal, along with its
+// type and location
+type spaceAnimalObj = {type: "spaceAnimal", location: "location"};
 
 // === ExpressJS setup + Server setup ===
 const spaceDatabase = [] as spaceEntity[];
@@ -45,17 +48,16 @@ app.post('/entity', (req, res) => {
 // lasooable returns all the space animals a space cowboy can lasso given their name
 app.get('/lassoable', (req, res) => {
     const cowboy = req.query.cowboy_name;
-    
+
     // Extract cowboy object from database
     const cowboy_obj = spaceDatabase.find(entity => entity.type === "space_cowboy" && 
-                                          entity.metadata.name === cowboy) as { type: "space_cowboy", 
-                                          metadata: spaceCowboy, location: location };
-    
+                                          entity.metadata.name === cowboy) as {type: "space_cowboy", 
+                                          metadata: spaceCowboy, location: location};
     // If the queried cowboy doesn't exist
-    if (cowboy_obj === null) {
-        return res.sendStatus(400);
+    if (cowboy_obj === undefined) {
+        return res.status(400).send('Cowboy does not exist');
     }
-    
+
     // Extract all lassoable entities
     const space_animals = spaceDatabase.filter(entity => isLassoable(cowboy_obj, entity) === true);  
     return res.status(200).json({"space_animals": space_animals});
