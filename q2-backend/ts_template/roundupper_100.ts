@@ -19,6 +19,9 @@ type spaceEntity =
 const spaceDatabase = [] as spaceEntity[];
 const app = express();
 
+// Express middleware for JSON parsing
+app.use(express.json());
+
 // the POST /entity endpoint adds an entity to your global space database
 app.post('/entity', (req, res) => {
     try {
@@ -58,6 +61,7 @@ app.get('/lassoable', (req, res) => {
     return res.status(200).json({"space_animals": space_animals});
 })
 
+app.listen(8080);
 
 //////////////////////////////////////////////// HELPER FUNCTIONS ////////////////////////////////////////////////
 
@@ -90,9 +94,9 @@ function checkFormat(entity: any): boolean {
 
     if (entity.type === 'space_animal') {
         // Return false if the space animal is not a pig, cow or flying_burger
-        if (!(entity.metadata.type === 'pig' ||
-            entity.metadata.type === 'cow' ||
-            entity.metadata.type === 'flying_burger')) {
+        if (entity.metadata.type !== 'pig' &&
+            entity.metadata.type !== 'cow' &&
+            entity.metadata.type !== 'flying_burger') {
             return false;
         } 
     } 
@@ -110,4 +114,3 @@ function checkFormat(entity: any): boolean {
 }
 
 
-app.listen(8080);
