@@ -14,10 +14,13 @@ type spaceEntity =
 
 // === ADD YOUR CODE BELOW :D ===
 
+// spaceAnimalMeta models a spaceAnimal, along with its 
+// type, metadata and location
+type spaceAnimalMeta = { type: "space_animal", metadata: spaceAnimal, location: location };
+
 // spaceAnimalObj models a spaceAnimal, along with its
 // type and location
-type spaceAnimalObj = 
-     {type: "space_animal", location: location};
+type spaceAnimalObj = { type: "pig" | "cow" | "flying_burger", location: location };
 
 // === ExpressJS setup + Server setup ===
 const spaceDatabase = [] as spaceEntity[];
@@ -49,7 +52,6 @@ app.post('/entity', (req, res) => {
 // lasooable returns all the space animals a space cowboy can lasso given their name
 app.get('/lassoable', (req, res) => {
     const cowboy = req.query.cowboy_name;
-
     // Extract cowboy object from database
     const cowboy_obj = spaceDatabase.find(entity => entity.type === "space_cowboy" && 
                                           entity.metadata.name === cowboy) as {type: "space_cowboy", 
@@ -58,12 +60,13 @@ app.get('/lassoable', (req, res) => {
     if (cowboy_obj === undefined) {
         return res.status(400).send('Cowboy does not exist');
     }
-
     // Extract all lassoable entities
-    const space_animals_with_meta = spaceDatabase.filter(entity => isLassoable(cowboy_obj, entity) === true);  
-    const space_animals = space_animals_with_meta.map(({metadata, ...keepAttrs}) => keepAttrs) as spaceAnimalObj[];
+    const space_animals_meta = spaceDatabase.filter(entity => isLassoable(cowboy_obj, entity) === true) as spaceAnimalMeta[];  
 
-    return res.status(200).json({"space_animals": space_animals});
+    // Remove the 'type' key and replace 'metadata' with 'metadata.type' for every space animal object in the array above
+    const space_animals = space_animals_meta.map(({ metadata, location }) => ({location, type: metadata.type})) as spaceAnimalObj[];
+
+    return res.status(200).json({ "space_animals": space_animals });
 })
 
 app.listen(8080);
@@ -72,6 +75,11 @@ app.listen(8080);
 
 // A helper function to check whether a space animal is lassoable
 function isLassoable(space_cowboy: spaceEntity, space_animal: spaceEntity): boolean {
+    // Cowboy's shouldn't be lassoed
+    if (space_animal.type === "space_cowboy") {
+        return false;
+    }
+
     const space_cowboy_meta = space_cowboy.metadata as spaceCowboy;
     const lassoLength = space_cowboy_meta.lassoLength;
 
